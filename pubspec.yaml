@@ -11,8 +11,8 @@ dependencies:
     sdk: flutter
   stacked: ^3.4.0
   stacked_services: ^1.1.0
-  syncfusion_flutter_charts: ^24.2.4+1
-  syncfusion_flutter_datagrid: ^24.2.4
+  syncfusion_flutter_charts: ^22.2.12
+  syncfusion_flutter_datagrid: ^22.2.12
 
 
 dev_dependencies:
