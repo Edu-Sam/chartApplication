@@ -19,7 +19,7 @@ class DataTableView extends StatelessWidget {
             body: SafeArea(
               child: Column(
                 children: [
-                  Text('Example data grid'),
+                  const Text('Example data grid'),
                   Expanded(
                     child: SfDataGrid(
                       source: model.employeeDataSource,
@@ -62,7 +62,7 @@ class DataTableView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text('data')
+                  const Text('data')
                 ],
               ),
             ),

@@ -34,13 +34,17 @@ class DataTableViewModel extends BaseViewModel {
 class EmployeeDataSource extends DataGridSource {
   EmployeeDataSource({required List<Employee> employees}) {
     _employees = employees
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'id', value: e.id),
-              DataGridCell<String>(columnName: 'name', value: e.name),
-              DataGridCell<String>(
+        .map<DataGridRow>(
+          (e) => DataGridRow(
+            cells: [
+              DataGridCell(columnName: 'id', value: e.id),
+              DataGridCell(columnName: 'name', value: e.name),
+              DataGridCell(
                   columnName: 'designation', value: e.designation),
-              DataGridCell<int>(columnName: 'salary', value: e.salary),
-            ]))
+              DataGridCell(columnName: 'salary', value: e.salary),
+            ],
+          ),
+        )
         .toList();
   }
 
@@ -52,15 +56,18 @@ class EmployeeDataSource extends DataGridSource {
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
-        cells: row.getCells().map<Widget>((dataGridCell) {
-      return Container(
-        alignment: (dataGridCell.columnName == 'id' ||
-                dataGridCell.columnName == 'salary')
-            ? Alignment.centerRight
-            : Alignment.centerLeft,
-        padding: EdgeInsets.all(16.0),
-        child: Text(dataGridCell.value.toString()),
-      );
-    }).toList());
+      cells: row.getCells().map<Widget>(
+        (dataGridCell) {
+          return Container(
+            alignment: (dataGridCell.columnName == 'id' ||
+                    dataGridCell.columnName == 'salary')
+                ? Alignment.centerRight
+                : Alignment.centerLeft,
+            padding: const EdgeInsets.all(16.0),
+            child: Text(dataGridCell.value.toString()),
+          );
+        },
+      ).toList(),
+    );
   }
 }
