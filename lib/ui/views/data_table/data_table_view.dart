@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_chart_app/ui/views/test.dart';
 import 'package:stacked/stacked.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import 'data_table_viewmodel.dart';
@@ -20,6 +22,54 @@ class DataTableView extends StatelessWidget {
               child: Column(
                 children: [
                   const Text('Example data grid'),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TestPage(
+                            categoryXAxis: CategoryAxis(
+                              name: 'jimmy',
+                              title: AxisTitle(text: 'cjscjs'),
+                              axisLine: const AxisLine(
+                                color: Colors.red,
+                                width: 2,
+                              ),
+                            ),
+                            categoryYAxis: CategoryAxis(
+                              name: 'nsnkjs',
+                              title: AxisTitle(text: 'cjsc3uybewhbwjbjs'),
+                              axisLine: const AxisLine(
+                                color: Colors.green,
+                                width: 2,
+                              ),
+                            ),
+                            chartTitle: ChartTitle(
+                              text: '',
+                              textStyle: const TextStyle(color: Colors.red),
+                            ),
+                            legend: const Legend(
+                              isVisible: true,
+                              position: LegendPosition.bottom,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text("press me"),
+                  ),
+                  const SizedBox(height: 20),
+                  SfCircularChart(
+                    series: <CircularSeries>[
+                      PieSeries<ChartData, String>(
+                        dataSource: pieData,
+                        xValueMapper: (ChartData data, _) => data.x,
+                        yValueMapper: (ChartData data, _) => data.y,
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                   Expanded(
                     child: SfDataGrid(
                       source: model.employeeDataSource,
@@ -70,3 +120,16 @@ class DataTableView extends StatelessWidget {
         });
   }
 }
+
+class ChartData {
+  ChartData(this.x, this.y);
+
+  final String x;
+  final double y;
+}
+
+final List<ChartData> pieData = [
+  ChartData('A', 25),
+  ChartData('B', 35),
+  ChartData('C', 40),
+];
