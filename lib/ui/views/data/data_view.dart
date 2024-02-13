@@ -15,55 +15,73 @@ class DataView extends StackedView<DataViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
-        child: ListView(
+        child: Column(
           children: [
-            Container(
-              height: 300,
-              width: 600,
-              color: Colors.purple,
-            ),
             ElevatedButton(
               onPressed: () {},
-              child: Text('Get Data from random url'),
+              style: ElevatedButton.styleFrom(),
+              child: const Text('Get Data from random url'),
             ),
-            if (viewModel.chartData != {} || viewModel.chartData.isNotEmpty)
-              if (!viewModel.isFetching)
-                ChartWidgetView(
-                  dataSets: viewModel.chartData['datasets'],
-                  xKey: viewModel.chartData['x_axis_key'],
-                  yKey: viewModel.chartData['y_axis_key'],
-                  name: viewModel.chartData['chart_name'] ?? "",
-                  dataLabelSettings: const DataLabelSettings(isVisible: true),
-                  widgetType: viewModel.chartData['chart_type'] ?? "line_chart",
-                ),
-            if (viewModel.chartData != {} || viewModel.chartData.isNotEmpty)
-              if (!viewModel.isFetching)
-                ChartWidgetView(
-                  dataSets: viewModel.chartData['datasets'],
-                  xKey: viewModel.chartData['x_axis_key'],
-                  yKey: viewModel.chartData['y_axis_key'],
-                  name: viewModel.chartData['chart_name'] ?? "",
-                  dataLabelSettings: const DataLabelSettings(isVisible: true),
-                  widgetType: "line_chart_2",
-                ),
-            if (viewModel.chartData != {} || viewModel.chartData.isNotEmpty)
-              if (!viewModel.isFetching)
-                ChartWidgetView(
-                  dataSets: viewModel.chartData['datasets'],
-                  name: viewModel.chartData['chart_name'] ?? "",
-                  dataLabelSettings: const DataLabelSettings(isVisible: true),
-                  widgetType: "spark_line",
-                ),
-            if (viewModel.tableData != {} || viewModel.tableData.isNotEmpty)
-              ChartWidgetView(
-                tableData: viewModel.tableData['data'],
-                tableHeaders: viewModel.tableData['table_headers'],
-                name: viewModel.tableData['table_name'] ?? "",
-                dataLabelSettings: const DataLabelSettings(isVisible: true),
-                widgetType: viewModel.tableData['chart_type'] ?? "data_table",
-              ),
+            viewModel.isFetching
+                ? Center(child: const CircularProgressIndicator())
+                : Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        // ---------  Line Chart Widget ------------------ //
+                        if (viewModel.chartData != {} ||
+                            viewModel.chartData.isNotEmpty)
+                          if (!viewModel.isFetching)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: ChartWidgetView(
+                                dataSets: viewModel.chartData['datasets'],
+                                xKey: viewModel.chartData['x_axis_key'],
+                                yKey: viewModel.chartData['y_axis_key'],
+                                name: viewModel.chartData['chart_name'] ?? "",
+                                dataLabelSettings:
+                                    const DataLabelSettings(isVisible: true),
+                                widgetType: viewModel.chartData['chart_type'] ??
+                                    "line_chart",
+                              ),
+                            ),
+                        if (viewModel.chartData != {} ||
+                            viewModel.chartData.isNotEmpty)
+                          if (!viewModel.isFetching)
+                            // ---------  Spark Line Chart Widget ------------------ //
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: ChartWidgetView(
+                                dataSets: viewModel.chartData['datasets'],
+                                name: viewModel.chartData['chart_name'] ?? "",
+                                dataLabelSettings:
+                                    const DataLabelSettings(isVisible: true),
+                                widgetType: "spark_line",
+                              ),
+                            ),
+                        if (viewModel.tableData != {} ||
+                            viewModel.tableData.isNotEmpty)
+                          // ---------  DataTable Widget ------------------ //
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: ChartWidgetView(
+                              tableData: viewModel.tableData['data'],
+                              tableHeaders:
+                                  viewModel.tableData['table_headers'],
+                              name: viewModel.tableData['table_name'] ?? "",
+                              dataLabelSettings:
+                                  const DataLabelSettings(isVisible: true),
+                              widgetType: viewModel.tableData['chart_type'] ??
+                                  "data_table",
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
           ],
         ),
       ),

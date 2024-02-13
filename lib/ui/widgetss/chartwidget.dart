@@ -26,6 +26,7 @@ class ChartWidgetView extends StatelessWidget {
     required this.name,
     this.xAxistTitle,
     this.yAxistTitle,
+    this.chartSets,
   }) : super(key: key);
 
   final CategoryAxis? categoryXAxis;
@@ -46,6 +47,7 @@ class ChartWidgetView extends StatelessWidget {
   final List? tableHeaders;
   final String? xAxistTitle;
   final String? yAxistTitle;
+  final List<List>? chartSets;
 
   @override
   Widget build(BuildContext context) {
@@ -53,46 +55,61 @@ class ChartWidgetView extends StatelessWidget {
 
     switch (widgetType) {
       case "line_chart":
-        if (dataSets == null) {
-          output = const SizedBox();
-        } else {
-          output = SfCartesianChart(
-            primaryXAxis: categoryXAxis ??
-                CategoryAxis(
-                  name: xAxistTitle ?? "",
-                  title: AxisTitle(text: xAxistTitle ?? ""),
-                  axisLine: const AxisLine(
-                    color: Colors.red,
-                    width: 2,
-                  ),
-                ),
-            primaryYAxis: categoryYAxis ??
-                CategoryAxis(
-                  name: yAxistTitle ?? '',
-                  title: AxisTitle(text: yAxistTitle ?? ""),
-                  axisLine: const AxisLine(
-                    color: Colors.green,
-                    width: 2,
-                  ),
-                ),
-            title: chartTitle,
-            legend: legend,
-            tooltipBehavior: tooltipBehavior,
-            series: List.generate(
-              dataSets!.length,
-              (index) {
-                return LineSeries(
-                  dataSource: List.from(dataSets![index]["data"]),
-                  xValueMapper: (datum, _) => extractValue(datum, xKey!),
-                  yValueMapper: (datum, _) => extractValue(datum, yKey!),
-                  name: dataSets![index]["label"],
-                  dataLabelSettings: dataLabelSettings,
-                );
-              },
+        output = SfCartesianChart(
+          primaryXAxis: CategoryAxis(
+            name: xAxistTitle ?? null,
+            title:
+                xAxistTitle != null ? AxisTitle(text: xAxistTitle ?? "") : null,
+            axisLine: const AxisLine(
+              color: Colors.red,
+              width: 2,
             ),
-          );
-        }
+          ),
+          primaryYAxis: categoryYAxis ??
+              CategoryAxis(
+                name: yAxistTitle ?? null,
+                title: yAxistTitle != null
+                    ? AxisTitle(text: yAxistTitle ?? "")
+                    : null,
+                axisLine: const AxisLine(
+                  color: Colors.green,
+                  width: 2,
+                ),
+              ),
+          title: chartTitle,
+          legend: legend,
+          tooltipBehavior: tooltipBehavior,
+          series: List.generate(
+            dataSets!.length,
+            (index) => LineSeries(
+              dataSource: List.from(dataSets![index]['data']),
+              xValueMapper: (datum, _) => extractValue(datum, xKey!),
+              yValueMapper: (datum, _) => extractValue(datum, yKey!),
+              name: name,
+              dataLabelSettings: dataLabelSettings,
+            ),
+          ),
+        );
+        break;
 
+      case "chart_sets":
+        output = SfCartesianChart(
+          primaryXAxis: categoryXAxis,
+          primaryYAxis: categoryYAxis,
+          title: chartTitle,
+          legend: legend,
+          tooltipBehavior: tooltipBehavior,
+          series: List.generate(
+            chartSets!.length,
+            (index) => LineSeries(
+              dataSource: chartSets![index],
+              xValueMapper: (datum, _) => extractValue(datum, xKey!),
+              yValueMapper: (datum, _) => extractValue(datum, yKey!),
+              name: name,
+              dataLabelSettings: dataLabelSettings,
+            ),
+          ),
+        );
         break;
 
       case "pie_chart":
@@ -188,12 +205,7 @@ class ChartWidgetView extends StatelessWidget {
 
   dynamic extractValue(Map datum, String key) {
     final dynamic value = datum[key];
-
-    if (value == null) {
-      print(' vd vd ');
-      throw Exception('Null value found for key: $key');
-    } else if (isNumeric(value) is num) {
-      print(' worked here ');
+    if (value is num) {
       return value.toDouble();
     } else if (value is String) {
       return value;
