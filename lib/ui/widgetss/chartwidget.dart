@@ -87,26 +87,7 @@ class ChartWidgetView extends StatelessWidget {
               yValueMapper: (datum, _) => extractValue(datum, yKey!),
               name: name,
               dataLabelSettings: dataLabelSettings,
-            ),
-          ),
-        );
-        break;
-
-      case "chart_sets":
-        output = SfCartesianChart(
-          primaryXAxis: categoryXAxis,
-          primaryYAxis: categoryYAxis,
-          title: chartTitle,
-          legend: legend,
-          tooltipBehavior: tooltipBehavior,
-          series: List.generate(
-            chartSets!.length,
-            (index) => LineSeries(
-              dataSource: chartSets![index],
-              xValueMapper: (datum, _) => extractValue(datum, xKey!),
-              yValueMapper: (datum, _) => extractValue(datum, yKey!),
-              name: name,
-              dataLabelSettings: dataLabelSettings,
+              color: getColorFromRGBString(dataSets![index]['lineColor']),
             ),
           ),
         );

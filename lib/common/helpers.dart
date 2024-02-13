@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 List<String> getKeysFromMapWithMaxKeys(List listOfMaps) {
   if (listOfMaps.isEmpty) return [];
 
@@ -11,15 +13,10 @@ List<String> getKeysFromMapWithMaxKeys(List listOfMaps) {
     }
   }
 
-  if (maxMap == null) return [];
-
   return maxMap.keys.toList();
 }
 
 bool isNumeric(String str) {
-  if (str == null) {
-    return false;
-  }
   return double.tryParse(str) != null;
 }
 
@@ -33,4 +30,16 @@ String checkDataType(String input) {
   } else {
     return 'String';
   }
+}
+
+Color getColorFromRGBString(String rgbString) {
+  String cleanString = rgbString.replaceAll('rgb(', '').replaceAll(')', '');
+
+  List<String> values = cleanString.split(',');
+
+  int red = int.parse(values[0].trim());
+  int green = int.parse(values[1].trim());
+  int blue = int.parse(values[2].trim());
+
+  return Color.fromRGBO(red, green, blue, 1.0);
 }
