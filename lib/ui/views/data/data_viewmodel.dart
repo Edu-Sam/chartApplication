@@ -11,6 +11,12 @@ class DataViewModel extends BaseViewModel {
   Map _apiData = {};
   Map get apiData => _apiData;
 
+  Map _chartData = {};
+  Map get chartData => _chartData;
+
+  Map _tableData = {};
+  Map get tableData => _tableData;
+
   Future fetchPosts() async {
     _apiData.clear();
     _apiData = await _apiService.getChartData();
@@ -19,7 +25,10 @@ class DataViewModel extends BaseViewModel {
 
   void getData() async {
     updateData(true);
-    await fetchPosts();
+    var apiData = await fetchPosts();
+    _tableData = apiData['datagrid'];
+    _chartData = apiData['charts'];
+    notifyListeners();
     updateData(false);
   }
 

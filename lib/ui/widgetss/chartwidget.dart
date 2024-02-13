@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:my_chart_app/common/helpers.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -22,6 +24,8 @@ class ChartWidgetView extends StatelessWidget {
     this.tableData,
     this.tableHeaders,
     required this.name,
+    this.xAxistTitle,
+    this.yAxistTitle,
   }) : super(key: key);
 
   final CategoryAxis? categoryXAxis;
@@ -40,6 +44,8 @@ class ChartWidgetView extends StatelessWidget {
   final SparkChartTrackball? sparkChartTrackball;
   final List? tableData;
   final List? tableHeaders;
+  final String? xAxistTitle;
+  final String? yAxistTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -48,23 +54,41 @@ class ChartWidgetView extends StatelessWidget {
     switch (widgetType) {
       case "line_chart":
         if (dataSets == null) {
-          output = SizedBox();
+          output = const SizedBox();
         } else {
           output = SfCartesianChart(
-            primaryXAxis: categoryXAxis,
-            primaryYAxis: categoryYAxis,
+            primaryXAxis: categoryXAxis ??
+                CategoryAxis(
+                  name: xAxistTitle ?? "",
+                  title: AxisTitle(text: xAxistTitle ?? ""),
+                  axisLine: const AxisLine(
+                    color: Colors.red,
+                    width: 2,
+                  ),
+                ),
+            primaryYAxis: categoryYAxis ??
+                CategoryAxis(
+                  name: yAxistTitle ?? '',
+                  title: AxisTitle(text: yAxistTitle ?? ""),
+                  axisLine: const AxisLine(
+                    color: Colors.green,
+                    width: 2,
+                  ),
+                ),
             title: chartTitle,
             legend: legend,
             tooltipBehavior: tooltipBehavior,
             series: List.generate(
               dataSets!.length,
-              (index) => LineSeries(
-                dataSource: List.from(dataSets![index]["data"]),
-                xValueMapper: (datum, _) => extractValue(datum, xKey!),
-                yValueMapper: (datum, _) => extractValue(datum, yKey!),
-                name: dataSets![index]["label"],
-                dataLabelSettings: dataLabelSettings,
-              ),
+              (index) {
+                return LineSeries(
+                  dataSource: List.from(dataSets![index]["data"]),
+                  xValueMapper: (datum, _) => extractValue(datum, xKey!),
+                  yValueMapper: (datum, _) => extractValue(datum, yKey!),
+                  name: dataSets![index]["label"],
+                  dataLabelSettings: dataLabelSettings,
+                );
+              },
             ),
           );
         }
@@ -89,15 +113,30 @@ class ChartWidgetView extends StatelessWidget {
         break;
 
       case "spark_line":
-        output = SfSparkLineChart.custom(
-          trackball: sparkChartTrackball,
-          marker: sparkChartMarker,
-          labelDisplayMode: SparkChartLabelDisplayMode.all,
-          xValueMapper: (int index) =>
-              extractValue(dataSets![index]["data"][0], xKey!),
-          yValueMapper: (int index) =>
-              extractValue(dataSets![index]["data"][0], yKey!),
-          dataCount: dataSets!.length,
+        if (dataSets == null || dataSets!.isEmpty) {
+          output = const SizedBox();
+        }
+        output = ListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: dataSets!.map<Widget>((dataset) {
+            return SizedBox(
+              height: 300,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SfSparkLineChart.custom(
+                  trackball: const SparkChartTrackball(
+                      activationMode: SparkChartActivationMode.tap),
+                  marker: const SparkChartMarker(
+                      displayMode: SparkChartMarkerDisplayMode.all),
+                  labelDisplayMode: SparkChartLabelDisplayMode.all,
+                  xValueMapper: (int index) => dataset['data'][index]['month'],
+                  yValueMapper: (int index) => dataset['data'][index]['sales'],
+                  dataCount: dataset['data'].length,
+                ),
+              ),
+            );
+          }).toList(),
         );
         break;
 
@@ -149,7 +188,12 @@ class ChartWidgetView extends StatelessWidget {
 
   dynamic extractValue(Map datum, String key) {
     final dynamic value = datum[key];
-    if (value is num) {
+
+    if (value == null) {
+      print(' vd vd ');
+      throw Exception('Null value found for key: $key');
+    } else if (isNumeric(value) is num) {
+      print(' worked here ');
       return value.toDouble();
     } else if (value is String) {
       return value;
