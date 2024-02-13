@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ChartWidgetView extends StatelessWidget {
   const ChartWidgetView({
@@ -19,6 +20,8 @@ class ChartWidgetView extends StatelessWidget {
     this.markerSettings,
     this.sparkChartMarker,
     this.sparkChartTrackball,
+    this.tableData,
+    this.tableHeaders,
   }) : super(key: key);
 
   final CategoryAxis? categoryXAxis;
@@ -35,6 +38,8 @@ class ChartWidgetView extends StatelessWidget {
   final MarkerSettings? markerSettings;
   final SparkChartMarker? sparkChartMarker;
   final SparkChartTrackball? sparkChartTrackball;
+  final List? tableData;
+  final List? tableHeaders;
 
   @override
   Widget build(BuildContext context) {
@@ -98,9 +103,29 @@ class ChartWidgetView extends StatelessWidget {
             dataSource: dataSets,
             xValueMapper: (datum, _) => extractValue(datum, xKey),
             yValueMapper: (datum, _) => extractValue(datum, yKey),
-            name: names[0], 
+            name: names[0],
           ),
         );
+        break;
+
+      case "data_table":
+        if (tableHeaders != null && tableData != null) {
+          DataSource dataTableSource = DataSource(
+            columnHeaders: tableHeaders!,
+            dataSource: tableData!,
+          );
+          output = Column(
+            children: List.generate(
+              dataSets.length,
+              (index) => SfDataGrid(
+                source: dataTableSource,
+                columns: [],
+              ),
+            ),
+          );
+        } else {
+          output = const SizedBox();
+        }
         break;
 
       default:
@@ -122,3 +147,38 @@ class ChartWidgetView extends StatelessWidget {
   }
 }
 
+class DataSource extends DataGridSource {
+  DataSource({required List dataSource, required List columnHeaders}) {
+    _dataSource = dataSource
+        .map<DataGridRow>(
+          (e) => DataGridRow(
+            cells: columnHeaders
+                .map<DataGridCell>(
+                  (header) =>
+                      DataGridCell(columnName: header, value: e[header]),
+                )
+                .toList(),
+          ),
+        )
+        .toList();
+  }
+
+  List<DataGridRow> _dataSource = [];
+
+  @override
+  List<DataGridRow> get rows => _dataSource;
+
+  @override
+  DataGridRowAdapter? buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+      cells: row.getCells().map<Widget>(
+        (dataGridCell) {
+          return Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(dataGridCell.value.toString()),
+          );
+        },
+      ).toList(),
+    );
+  }
+}
