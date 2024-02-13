@@ -10,30 +10,30 @@ class ChartWidgetView extends StatelessWidget {
     this.categoryYAxis,
     this.chartTitle,
     this.legend,
-    required this.dataSets,
-    required this.xKey,
-    required this.yKey,
-    required this.names,
+    this.dataSets,
+    this.xKey,
+    this.yKey,
     this.dataLabelSettings,
-    required this.chartType,
+    required this.widgetType,
     this.tooltipBehavior,
     this.markerSettings,
     this.sparkChartMarker,
     this.sparkChartTrackball,
     this.tableData,
     this.tableHeaders,
+    required this.name,
   }) : super(key: key);
 
   final CategoryAxis? categoryXAxis;
   final CategoryAxis? categoryYAxis;
   final ChartTitle? chartTitle;
   final Legend? legend;
-  final List<List<Map<String, dynamic>>> dataSets;
-  final String xKey;
-  final String yKey;
-  final List<String> names;
+  final List? dataSets;
+  final String? xKey;
+  final String? yKey;
+  final String name;
   final DataLabelSettings? dataLabelSettings;
-  final String chartType;
+  final String widgetType;
   final TooltipBehavior? tooltipBehavior;
   final MarkerSettings? markerSettings;
   final SparkChartMarker? sparkChartMarker;
@@ -45,25 +45,30 @@ class ChartWidgetView extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget output = const SizedBox();
 
-    switch (chartType) {
+    switch (widgetType) {
       case "line_chart":
-        output = SfCartesianChart(
-          primaryXAxis: categoryXAxis,
-          primaryYAxis: categoryYAxis,
-          title: chartTitle,
-          legend: legend,
-          tooltipBehavior: tooltipBehavior,
-          series: List.generate(
-            dataSets.length,
-            (index) => LineSeries(
-              dataSource: dataSets[index],
-              xValueMapper: (datum, _) => extractValue(datum, xKey),
-              yValueMapper: (datum, _) => extractValue(datum, yKey),
-              name: names[index],
-              dataLabelSettings: dataLabelSettings,
+        if (dataSets == null) {
+          output = SizedBox();
+        } else {
+          output = SfCartesianChart(
+            primaryXAxis: categoryXAxis,
+            primaryYAxis: categoryYAxis,
+            title: chartTitle,
+            legend: legend,
+            tooltipBehavior: tooltipBehavior,
+            series: List.generate(
+              dataSets!.length,
+              (index) => LineSeries(
+                dataSource: List.from(dataSets![index]["data"]),
+                xValueMapper: (datum, _) => extractValue(datum, xKey!),
+                yValueMapper: (datum, _) => extractValue(datum, yKey!),
+                name: dataSets![index]["label"],
+                dataLabelSettings: dataLabelSettings,
+              ),
             ),
-          ),
-        );
+          );
+        }
+
         break;
 
       case "pie_chart":
@@ -72,12 +77,12 @@ class ChartWidgetView extends StatelessWidget {
           legend: legend,
           tooltipBehavior: tooltipBehavior,
           series: List.generate(
-            dataSets.length,
+            dataSets!.length,
             (index) => PieSeries(
-              dataSource: dataSets[index],
-              xValueMapper: (datum, _) => extractValue(datum, xKey),
-              yValueMapper: (datum, _) => extractValue(datum, yKey),
-              name: names[index],
+              dataSource: dataSets![index]["data"],
+              xValueMapper: (datum, _) => extractValue(datum, xKey!),
+              yValueMapper: (datum, _) => extractValue(datum, yKey!),
+              name: dataSets![index]["label"],
             ),
           ),
         );
@@ -88,9 +93,11 @@ class ChartWidgetView extends StatelessWidget {
           trackball: sparkChartTrackball,
           marker: sparkChartMarker,
           labelDisplayMode: SparkChartLabelDisplayMode.all,
-          xValueMapper: (int index) => dataSets[index][0][xKey],
-          yValueMapper: (int index) => dataSets[index][0][yKey],
-          dataCount: dataSets.length,
+          xValueMapper: (int index) =>
+              extractValue(dataSets![index]["data"][0], xKey!),
+          yValueMapper: (int index) =>
+              extractValue(dataSets![index]["data"][0], yKey!),
+          dataCount: dataSets!.length,
         );
         break;
 
@@ -100,10 +107,10 @@ class ChartWidgetView extends StatelessWidget {
           legend: legend,
           tooltipBehavior: tooltipBehavior,
           series: PyramidSeries(
-            dataSource: dataSets,
-            xValueMapper: (datum, _) => extractValue(datum, xKey),
-            yValueMapper: (datum, _) => extractValue(datum, yKey),
-            name: names[0],
+            dataSource: dataSets![0]["data"],
+            xValueMapper: (datum, _) => extractValue(datum, xKey!),
+            yValueMapper: (datum, _) => extractValue(datum, yKey!),
+            name: dataSets![0]["label"],
           ),
         );
         break;
@@ -114,12 +121,17 @@ class ChartWidgetView extends StatelessWidget {
             columnHeaders: tableHeaders!,
             dataSource: tableData!,
           );
-          output = Column(
-            children: List.generate(
-              dataSets.length,
-              (index) => SfDataGrid(
-                source: dataTableSource,
-                columns: [],
+          output = SfDataGrid(
+            source: dataTableSource,
+            columns: List.generate(
+              tableHeaders!.length,
+              (index) => GridColumn(
+                columnName: tableHeaders![index],
+                label: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  alignment: Alignment.centerLeft,
+                  child: Text(tableHeaders![index]),
+                ),
               ),
             ),
           );

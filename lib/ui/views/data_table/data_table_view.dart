@@ -16,6 +16,7 @@ class DataTableView extends StatelessWidget {
         onViewModelReady: (viewModel) {
           viewModel.initEmployees();
         },
+        disposeViewModel: false,
         builder: (context, model, child) {
           return Scaffold(
             body: SafeArea(
@@ -28,32 +29,7 @@ class DataTableView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TestPage(
-                            categoryXAxis: CategoryAxis(
-                              name: 'jimmy',
-                              title: AxisTitle(text: 'cjscjs'),
-                              axisLine: const AxisLine(
-                                color: Colors.red,
-                                width: 2,
-                              ),
-                            ),
-                            categoryYAxis: CategoryAxis(
-                              name: 'nsnkjs',
-                              title: AxisTitle(text: 'cjsc3uybewhbwjbjs'),
-                              axisLine: const AxisLine(
-                                color: Colors.green,
-                                width: 2,
-                              ),
-                            ),
-                            chartTitle: ChartTitle(
-                              text: '',
-                              textStyle: const TextStyle(color: Colors.red),
-                            ),
-                            legend: const Legend(
-                              isVisible: true,
-                              position: LegendPosition.bottom,
-                            ),
-                          ),
+                          builder: (context) => TestPage(),
                         ),
                       );
                     },

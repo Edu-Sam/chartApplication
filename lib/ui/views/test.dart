@@ -4,17 +4,9 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class TestPage extends StatefulWidget {
-  const TestPage(
-      {super.key,
-      required this.categoryXAxis,
-      required this.categoryYAxis,
-      required this.chartTitle,
-      required this.legend});
-
-  final CategoryAxis categoryXAxis;
-  final CategoryAxis categoryYAxis;
-  final ChartTitle chartTitle;
-  final Legend legend;
+  const TestPage({
+    super.key,
+  });
 
   @override
   State<TestPage> createState() => _TestPageState();
@@ -69,8 +61,9 @@ class _TestPageState extends State<TestPage> {
       "x_axis_data": {"name": "", "title": "", "decoration": ""},
       "y_axis_data": {"name": "", "title": "", "decoration": ""}
     },
-    "datagrid": {
-      "type": "data_table",
+    "dataGrid": {
+      "chart_type": "data_table",
+      "table_name":"Demo data table",
       "table_headers": [
         "id",
         "name",
@@ -79,6 +72,7 @@ class _TestPageState extends State<TestPage> {
         "department",
         "hire_date"
       ],
+      "dataset":{},
       "data": [
         {
           "id": 10001,
@@ -246,6 +240,8 @@ class _TestPageState extends State<TestPage> {
 
   @override
   Widget build(BuildContext context) {
+    var charts = apiData['charts'];
+    var dataTable = apiData['dataGrid'];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Syncfusion Flutter chart'),
@@ -253,13 +249,13 @@ class _TestPageState extends State<TestPage> {
       body: ListView(
         children: [
           ChartWidgetView(
-            dataSets: [apiData['chart_data'], apiData['chart_data_2']],
-            xKey: apiData['x_axis_key'],
-            yKey: apiData['y_axis_key'],
-            names: [apiData['chart_name'], 'chart_data_2_name'],
+            dataSets: charts['datasets'],
+            xKey: charts['x_axis_key'],
+            yKey: charts['y_axis_key'],
+            name: charts['chart_name'],
             categoryXAxis: CategoryAxis(
-              name: apiData['x_axis_data']['name'],
-              title: AxisTitle(text: apiData['x_axis_data']['title']),
+              name: charts['name'],
+              title: AxisTitle(text: charts['title']),
               axisLine: const AxisLine(
                 color: Colors.red,
                 width: 2,
@@ -274,68 +270,41 @@ class _TestPageState extends State<TestPage> {
               ),
             ),
             dataLabelSettings: const DataLabelSettings(isVisible: true),
-            chartType: apiData['chart_type'],
+            widgetType: charts['chart_type'],
           ),
-          SizedBox(
-            height: 300,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SfSparkLineChart.custom(
-                trackball: const SparkChartTrackball(
-                    activationMode: SparkChartActivationMode.tap),
-                marker: const SparkChartMarker(
-                    displayMode: SparkChartMarkerDisplayMode.all),
-                labelDisplayMode: SparkChartLabelDisplayMode.all,
-                xValueMapper: (int index) =>
-                    apiData['chart_data'][index]['month'],
-                yValueMapper: (int index) =>
-                    apiData['chart_data'][index]['sales'],
-                dataCount: 5,
-              ),
-            ),
-          )
+          ListView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: charts['datasets'].map<Widget>((dataset) {
+              return SizedBox(
+                height: 300,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SfSparkLineChart.custom(
+                    trackball: const SparkChartTrackball(
+                        activationMode: SparkChartActivationMode.tap),
+                    marker: const SparkChartMarker(
+                        displayMode: SparkChartMarkerDisplayMode.all),
+                    labelDisplayMode: SparkChartLabelDisplayMode.all,
+                    xValueMapper: (int index) =>
+                        dataset['data'][index]['month'],
+                    yValueMapper: (int index) =>
+                        dataset['data'][index]['sales'],
+                    dataCount: dataset['data'].length,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          ChartWidgetView(
+            tableData: dataTable['data'],
+            tableHeaders: dataTable['table_headers'],
+            name: dataTable['table_name'],
+            dataLabelSettings: const DataLabelSettings(isVisible: true),
+            widgetType: dataTable['chart_type'],
+          ),
         ],
       ),
     );
   }
 }
-
-// case "pie_chart":
-//   output = SfCircularChart(
-//     title: chartTitle,
-//     legend: legend,
-//     tooltipBehavior: tooltipBehavior,
-//     series: <CircularSeries>[
-//       PieSeries(
-//         dataSource: data,
-//         xValueMapper: (datum, _) => extractValue(datum, xKey),
-//         yValueMapper: (datum, _) => extractValue(datum, yKey),
-//         name: name,
-//       )
-//     ],
-//   );
-//   break;
-
-// case "spark_line":
-//   output = SfSparkLineChart.custom(
-//     trackball: sparkChartTrackball,
-//     marker: sparkChartMarker,
-//     labelDisplayMode: SparkChartLabelDisplayMode.all,
-//     xValueMapper: (int index) => data[index][0][xKey],
-//     yValueMapper: (int index) => data[index][0][yKey],
-//     dataCount: data.length,
-//   );
-
-// case "pyramid_chart":
-//   output = SfPyramidChart(
-//     title: chartTitle,
-//     legend: legend,
-//     tooltipBehavior: tooltipBehavior,
-//     series: PyramidSeries(
-//       dataSource: data,
-//       xValueMapper: (datum, _) => extractValue(datum, xKey),
-//       yValueMapper: (datum, _) => extractValue(datum, yKey),
-//       name: name,
-//     ),
-//   );
-//   break;

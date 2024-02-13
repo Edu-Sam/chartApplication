@@ -5,6 +5,8 @@ import 'package:my_chart_app/ui/views/startup/startup_view.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:my_chart_app/ui/views/data_table/data_table_view.dart';
+import 'package:my_chart_app/ui/views/data/data_view.dart';
+import 'package:my_chart_app/services/api_service.dart';
 // @stacked-import
 
 @StackedApp(
@@ -12,13 +14,15 @@ import 'package:my_chart_app/ui/views/data_table/data_table_view.dart';
     MaterialRoute(page: HomeView),
     MaterialRoute(page: StartupView),
     MaterialRoute(page: DataTableView),
+    MaterialRoute(page: DataView),
 // @stacked-route
   ],
   dependencies: [
     LazySingleton(classType: BottomSheetService),
     LazySingleton(classType: DialogService),
     LazySingleton(classType: NavigationService),
-    // @stacked-service
+    LazySingleton(classType: ApiService),
+// @stacked-service
   ],
   bottomsheets: [
     StackedBottomsheet(classType: NoticeSheet),
