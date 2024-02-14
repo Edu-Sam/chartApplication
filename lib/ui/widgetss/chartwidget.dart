@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:my_chart_app/common/helpers.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
@@ -224,7 +223,7 @@ class DataSource extends DataGridSource {
         (dataGridCell) {
           return Container(
             padding: const EdgeInsets.all(16.0),
-            child: Text(dataGridCell.value.toString()),
+            child: Text('${dataGridCell.value ?? "N/A"}'),
           );
         },
       ).toList(),

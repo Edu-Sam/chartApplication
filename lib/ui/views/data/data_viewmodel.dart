@@ -1,4 +1,5 @@
 import 'package:my_chart_app/app/app.locator.dart';
+import 'package:my_chart_app/common/helpers.dart';
 import 'package:my_chart_app/services/api_service.dart';
 import 'package:stacked/stacked.dart';
 
@@ -17,9 +18,12 @@ class DataViewModel extends BaseViewModel {
   Map _tableData = {};
   Map get tableData => _tableData;
 
+  List<String> _tableHeaders = [];
+  List<String> get tableHeaders => _tableHeaders;
+
   Future fetchPosts() async {
     _apiData.clear();
-    _apiData = await _apiService.getChartData();
+    _apiData = await _apiService.getDataNoHeaders();
     return _apiData;
   }
 
@@ -28,6 +32,8 @@ class DataViewModel extends BaseViewModel {
     var apiData = await fetchPosts();
     _tableData = apiData['datagrid'];
     _chartData = apiData['charts'];
+    var noOfTitles = getKeysFromMapWithMaxKeys(apiData['datagrid']['data']);
+    _tableHeaders = noOfTitles;
     notifyListeners();
     updateData(false);
   }

@@ -24,7 +24,7 @@ class DataView extends StackedView<DataViewModel> {
               child: const Text('Get Data from random url'),
             ),
             viewModel.isFetching
-                ? Center(child: const CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : Expanded(
                     child: ListView(
                       shrinkWrap: true,
@@ -70,8 +70,7 @@ class DataView extends StackedView<DataViewModel> {
                                 const EdgeInsets.symmetric(horizontal: 16.0),
                             child: ChartWidgetView(
                               tableData: viewModel.tableData['data'],
-                              tableHeaders:
-                                  viewModel.tableData['table_headers'],
+                              tableHeaders: viewModel.tableHeaders,
                               name: viewModel.tableData['table_name'] ?? "",
                               dataLabelSettings:
                                   const DataLabelSettings(isVisible: true),
