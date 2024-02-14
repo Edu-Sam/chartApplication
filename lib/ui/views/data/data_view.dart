@@ -19,7 +19,9 @@ class DataView extends StackedView<DataViewModel> {
         child: Column(
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                viewModel.getDataFronUrl('');
+              },
               style: ElevatedButton.styleFrom(),
               child: const Text('Get Data from random url'),
             ),

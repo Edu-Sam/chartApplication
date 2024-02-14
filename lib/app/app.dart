@@ -7,6 +7,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:my_chart_app/ui/views/data_table/data_table_view.dart';
 import 'package:my_chart_app/ui/views/data/data_view.dart';
 import 'package:my_chart_app/services/api_service.dart';
+import 'package:my_chart_app/ui/dialogs/enter_link/enter_link_dialog.dart';
 // @stacked-import
 
 @StackedApp(
@@ -30,7 +31,8 @@ import 'package:my_chart_app/services/api_service.dart';
   ],
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),
-    // @stacked-dialog
+    StackedDialog(classType: EnterLinkDialog),
+// @stacked-dialog
   ],
 )
 class App {}

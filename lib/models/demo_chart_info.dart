@@ -75,8 +75,7 @@ class ChartInfo {
   }
 }
 
-
-/// 
+///
 /// Implemention test {failed}
 
 // Extracting data from API

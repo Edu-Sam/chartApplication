@@ -20,106 +20,34 @@ class _TestPageState extends State<TestPage> {
       "x_axis_key": "month",
       "y_axis_key": "sales",
       "chart_name": "demo",
-              "chart_data": [
-            {
-                "month": "Jan",
-                "sales": 200
-            },
-            {
-                "month": "Feb",
-                "sales": 215
-            },
-            {
-                "month": "Mar",
-                "sales": 180
-            },
-            {
-                "month": "Apr",
-                "sales": 240
-            },
-            {
-                "month": "May",
-                "sales": 225
-            },
-            {
-                "month": "Jun",
-                "sales": 210
-            },
-            {
-                "month": "Jul",
-                "sales": 230
-            },
-            {
-                "month": "Aug",
-                "sales": 220
-            },
-            {
-                "month": "Sep",
-                "sales": 210
-            },
-            {
-                "month": "Oct",
-                "sales": 205
-            },
-            {
-                "month": "Nov",
-                "sales": 215
-            },
-            {
-                "month": "Dec",
-                "sales": 230
-            }
-        ],
-        "chart_data_2": [
-            {
-                "month": "Jan",
-                "sales": 231
-            },
-            {
-                "month": "Feb",
-                "sales": 221
-            },
-            {
-                "month": "Mar",
-                "sales": 345
-            },
-            {
-                "month": "Apr",
-                "sales": 112
-            },
-            {
-                "month": "May",
-                "sales": 453
-            },
-            {
-                "month": "Jun",
-                "sales": 312
-            },
-            {
-                "month": "Jul",
-                "sales": 541
-            },
-            {
-                "month": "Aug",
-                "sales": 99
-            },
-            {
-                "month": "Sep",
-                "sales": 123
-            },
-            {
-                "month": "Oct",
-                "sales": 763
-            },
-            {
-                "month": "Nov",
-                "sales": 312
-            },
-            {
-                "month": "Dec",
-                "sales": 443
-            }
-        ],
+      "chart_data": [
+        {"month": "Jan", "sales": 200},
+        {"month": "Feb", "sales": 215},
+        {"month": "Mar", "sales": 180},
+        {"month": "Apr", "sales": 240},
+        {"month": "May", "sales": 225},
+        {"month": "Jun", "sales": 210},
+        {"month": "Jul", "sales": 230},
+        {"month": "Aug", "sales": 220},
+        {"month": "Sep", "sales": 210},
+        {"month": "Oct", "sales": 205},
+        {"month": "Nov", "sales": 215},
+        {"month": "Dec", "sales": 230}
+      ],
+      "chart_data_2": [
+        {"month": "Jan", "sales": 231},
+        {"month": "Feb", "sales": 221},
+        {"month": "Mar", "sales": 345},
+        {"month": "Apr", "sales": 112},
+        {"month": "May", "sales": 453},
+        {"month": "Jun", "sales": 312},
+        {"month": "Jul", "sales": 541},
+        {"month": "Aug", "sales": 99},
+        {"month": "Sep", "sales": 123},
+        {"month": "Oct", "sales": 763},
+        {"month": "Nov", "sales": 312},
+        {"month": "Dec", "sales": 443}
+      ],
       "datasets": [
         {
           "label": "Dataset 1",
@@ -163,7 +91,7 @@ class _TestPageState extends State<TestPage> {
     },
     "dataGrid": {
       "chart_type": "data_table",
-      "table_name":"Demo data table",
+      "table_name": "Demo data table",
       "table_headers": [
         "id",
         "name",
@@ -172,7 +100,7 @@ class _TestPageState extends State<TestPage> {
         "department",
         "hire_date"
       ],
-      "dataset":{},
+      "dataset": {},
       "data": [
         {
           "id": 10001,
