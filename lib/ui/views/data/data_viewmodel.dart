@@ -45,7 +45,10 @@ class DataViewModel extends BaseViewModel {
     updateData(false);
   }
 
-  void getDataFronUrl(String url) async {
+  Future getDataFronUrl(String url) async {
+    if (url == '' || url.isEmpty) {
+      return 'empty link';
+    }
     updateData(true);
     var apiData = await _apiService.getRandomData(url);
     print(apiData);
