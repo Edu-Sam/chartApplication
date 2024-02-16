@@ -25,22 +25,58 @@ class DataViewModel extends BaseViewModel {
   Map _tableData = {};
   Map get tableData => _tableData;
 
+  Map _rangeData = {};
+  Map get rangeData => _rangeData;
+
+  Map _tableDataHeaders = {};
+  Map get tableDataHeaders => _tableDataHeaders;
+
   List<String> _tableHeaders = [];
   List<String> get tableHeaders => _tableHeaders;
 
+  List<String> _tableHeaders2 = [];
+  List<String> get tableHeaders2 => _tableHeaders2;
+
   Future fetchPosts() async {
     _apiData.clear();
-    _apiData = await _apiService.getDataNoHeaders();
+    _apiData = await _apiService.getChartData();
     return _apiData;
   }
 
-  void getData() async {
-    updateData(true);
-    var apiData = await fetchPosts();
-    _tableData = apiData['datagrid'];
-    _chartData = apiData['charts'];
-    var noOfTitles = getKeysFromMapWithMaxKeys(apiData['datagrid']['data']);
+  getChartData() async {
+    _chartData.clear();
+    var apiData = await _apiService.getChartData();
+    _chartData = apiData['data'];
+  }
+
+  getRangeData() async {
+    _rangeData.clear();
+    var apiData = await _apiService.getRangeChart();
+    _rangeData = apiData['data'];
+  }
+
+  getTableData() async {
+    _tableData.clear();
+    _tableDataHeaders.clear();
+    //
+    var apiData = await _apiService.getTableData();
+    var apiTable = await _apiService.getTableNoHeaders();
+    //
+    _tableData = apiData['data'];
+    _tableDataHeaders = apiTable['data'];
+    //
+    var noOfTitles = getKeysFromMapWithMaxKeys(apiData['data']['data']);
+    var noOfHeaders = getKeysFromMapWithMaxKeys(apiTable['data']['data']);
+    //
     _tableHeaders = noOfTitles;
+    _tableHeaders2 = noOfHeaders;
+  }
+
+  getData() async {
+    updateData(true);
+    await getChartData();
+    await getRangeData();
+    await getTableData();
     notifyListeners();
     updateData(false);
   }
